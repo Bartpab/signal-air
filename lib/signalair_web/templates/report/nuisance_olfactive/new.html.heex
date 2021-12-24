@@ -1,0 +1,192 @@
+<h2><%= gettext "Signaler une nuisance olfactive" %></h2>
+
+
+<div class="form">
+    <%= form_for @changeset, Routes.nuisance_olfactive_path(@conn, :create), [as: :nuisance_olfactive], fn f -> %>
+
+        <div id="erreur-geolocalisation" class="alert alert-danger" role="alert"></div>
+        
+        <div class="form-group row">
+            <div class="col-sm-6 form-check">
+                <%= hidden_input f, :lat, id: "lat" %>
+                <%= hidden_input f, :long, id: "long" %>
+            </div>
+        </div>  
+
+        <div class="row  mb-3">
+            <label for="adresse" class="col-form-label col-2"><%= gettext "Type d'odeur" %></label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="_type_odeur" style="display: none" name="type_odeur" onkeydown="$component.verifierFormulaire()" />
+                <%= select f, :type_odeur, @type_odeurs, prompt: [key: "Choisir une odeur", value: ""], id: "type_odeur", class: "form-select", onchange: "$component.verifierFormulaire()" %>
+            </div>
+            <div class="form-check form-switch col-sm-1">
+                <input class="form-check-input" type="checkbox" role="switch" onclick="$component.basculerAutreOdeur()" id="interupteurAutreOdeur">
+                <label class="form-check-label" for="interupteurAutreOdeur"><%= gettext "Autre" %></label>
+            </div>
+        </div>
+
+        <div class="row  mb-3">
+            <label for="adresse" class="col-form-label col-2"><%= gettext "Intensité de l'odeur" %></label>
+            <div class="col-sm-8">
+                <%= select f, :intensite_odeur, @intensites_odeur, prompt: [key: "Choisir une intensité", value: ""], id: "intensite_odeur", class: "form-select", onchange: "$component.verifierFormulaire()" %>
+            </div>
+        </div>
+
+        <div class="row  mb-3">
+            <label for="adresse" class="col-form-label col-sm-2"><%= gettext "Adresse" %></label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="adresse" name="adresse" />
+            </div>
+            <div class="col-sm-1">
+                <a class="btn btn-primary mb-3" onclick="$component.recupererGeolocalisation()"><i class="bi bi-geo-alt"></i></a>
+            </div>
+        </div>
+
+        <fieldset class="row mb-3">
+            <legend class="col-form-label col-sm-2 pt-0">Checklist</legend>
+            <div class="col-sm-10">
+                <div class="form-check">
+                    <input type="checkbox" id="intensite_odeur-check" class="form-check-input" onclick="return false;" readonly/>
+                    <label class="form-check-label" for="type_odeur-check"><%= gettext "Intensité de l'odeur remplie" %></label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="type_odeur-check" class="form-check-input" onclick="return false;" readonly/>
+                    <label class="form-check-label" for="type_odeur-check"><%= gettext "Type d'odeur remplie" %></label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="geolocalisation-check" class="form-check-input" onclick="return false;" readonly/>
+                    <label class="form-check-label" for="geolocalisation-check"><%= gettext "Localisation remplie" %></label>
+                </div>
+            </div>
+        </fieldset>
+        <%= submit gettext("Envoyer"), class: "btn btn-primary mb-3", id: "submit", disabled: true %>
+    <% end %>
+</div>
+<script type="text/javascript"> 
+let $component = Object.create({
+    autre_odeur: false,
+    sauvegarde_html_odeur: "",
+    async ready() {
+        $("#erreur-geolocalisation").hide();
+        $("#__type_odeur").hide();
+
+        $("#adresse").autocomplete({
+            select: async function (event, ui) {
+                await this.definirGeolocalisation(ui.item.coords);
+                return false;
+            }.bind(this),
+            async source(request, response) {
+                let data = await adresse.rechercher(request.term);
+                console.log(data);
+                data = data.features.map(function (feature) {
+                    return {
+                        'coords': {
+                            'latitude': feature.geometry.coordinates[1],
+                            'longitude': feature.geometry.coordinates[0]
+                        },
+                        'label': feature.properties.label,
+                        'value': feature.properties.label
+                    }
+                });
+
+                response(data);
+            }
+        });
+
+        this.verifierFormulaire();
+    },
+
+    basculerAutreOdeur() {
+        let old = $("#type_odeur");
+        let _new = $("#_type_odeur");
+
+        old.attr('id', '_type_odeur');
+        old.attr('name', '');
+        old.hide();
+
+        _new.show();
+        _new.focus();
+        _new.attr('name', 'report[type_odeur]')
+        _new.attr('id', 'type_odeur');
+
+        this.verifierFormulaire();
+    },
+
+    async definirGeolocalisation(coords) {
+        $("#lat").val(coords.latitude);
+        $("#long").val(coords.longitude);
+        await this.verifierFormulaire();
+    },
+    
+    async verifierFormulaire() {
+        let checks = [
+            {
+                is_ok: $("#lat").val() != "" && $("#long").val() != "",
+                on_nok: function () {
+                    $("#geolocalisation-check").prop("checked", false);
+                },
+                on_ok: function () {
+                    $("#geolocalisation-check").prop("checked", true);
+                }
+            }, {
+                is_ok: $("#type_odeur").val() != "",
+                on_nok: function () {
+                    $("#type_odeur-check").prop("checked", false);
+                },
+                on_ok: function () {
+                    $("#type_odeur-check").prop("checked", true);
+                }                
+            }, {
+                is_ok: $("#intensite_odeur").val() != "",
+                on_nok: function () {
+                    $("#intensite_odeur-check").prop("checked", false);
+                },
+                on_ok: function () {
+                    $("#intensite_odeur-check").prop("checked", true);
+                }                
+            }
+        ];
+
+        checks.forEach(function(c) {
+            if (!c.is_ok) {
+                c.on_nok();
+            } else {
+                c.on_ok();
+            }
+        });
+
+        if (checks.every((c) => c.is_ok)) {
+            $("#submit").prop("disabled", false);
+            return true;
+        } else {
+            $("#submit").prop("disabled", true);
+            return false;
+        }
+    },
+
+    async recupererGeolocalisation () {
+        try {
+            let coords = await recupererGeolocalisation();
+            await this.definirGeolocalisation(coords);
+            let nearest = (await adresse.rechercherCoordonnees(coords)).features[0];
+            $("#adresse").val(nearest.properties.label);
+        } catch(error_code) {
+            if(error_code == 0) {
+                $("#erreur-geolocalisation").text("Le navigateur n'est pas capable de géolocalisation.");
+            } else if(error_code == 1) {
+                $("#erreur-geolocalisation").text("Permission refusée pour récupérer la géolocalisation.");
+            } else if(error_code == 2) {
+                $("#erreur-geolocalisation").text("L'acquisition de la géolocalisation a échoué.");
+            } else if(error_code == 3) {
+                $("#erreur-geolocalisation").text("Le délai de récupération de la géolocalisation a expiré.");
+            }
+            $("#erreur-geolocalisation").show();
+        }
+    }
+});
+
+$(document).ready(function () {
+    $component.ready();
+});
+
+</script>

@@ -1,0 +1,8 @@
+<section class="phx-hero">
+  <h1><%= gettext "Welcome to %{name}!", name: "Signal'Air" %></h1>
+  <p>Concept d'une plateforme de signalement des nuisances</p>
+
+  <%= link("Signaler", to: Routes.nuisance_olfactive_path(@conn, :new)) %>
+  <%= link("Surveiller", to: Routes.live_path(@conn, SignalAirWeb.Monitoring.EntrepriseLive)) %>
+</section>
+
