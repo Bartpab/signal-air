@@ -14,11 +14,7 @@ end
 
 if config_env() == :prod do
   database_path =
-    System.get_env("DATABASE_PATH") ||
-      raise """
-      environment variable DATABASE_PATH is missing.
-      For example: /etc/SignalAir/SignalAir.db
-      """
+    System.get_env("DATABASE_PATH") || ""
 
   config :SignalAir, SignalAir.Repo,
     database: database_path,
