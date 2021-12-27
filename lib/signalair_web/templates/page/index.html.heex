@@ -1,8 +1,15 @@
-<section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "Signal'Air" %></h1>
-  <p>Concept d'une plateforme de signalement des nuisances</p>
-
-  <%= link("Signaler", to: Routes.nuisance_olfactive_path(@conn, :new)) %>
-  <%= link("Surveiller", to: Routes.live_path(@conn, SignalAirWeb.Monitoring.EntrepriseLive)) %>
+<section class="jumbotron text-center">
+  <div class="container">
+    <h1 class="jumbotron-heading">
+      <%= gettext "Bienvenue sur %{name} !", name: "Signal'Air" %>
+    </h1>
+    <p class="lead text-muted">
+      <%= gettext "Plateforme de signalement des nuisances liées à la qualité de l'air." %>
+    </p>
+    <p>
+        <%= link "Signaler", to: Routes.nuisance_olfactive_path(@conn, :new), class: "btn btn-primary"  %>
+        <%= link "Surveiller", to: Routes.live_path(@conn, SignalAirWeb.Monitoring.EntrepriseLive), class: "btn btn-secondary" %>
+    </p>
+  </div>
 </section>
 
