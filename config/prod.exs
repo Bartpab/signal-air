@@ -19,6 +19,10 @@ config :SignalAir, SignalAirWeb.Endpoint,
     url: [host: System.get_env("APP_NAME"), port: 443],
     secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
     server: true
+
+config :SignalAir, SignalAir.Repo,
+    adapter: Etso.Adapter,
+    show_sensitive_data_on_connection_error: false
     
 # ## SSL Support
 #
