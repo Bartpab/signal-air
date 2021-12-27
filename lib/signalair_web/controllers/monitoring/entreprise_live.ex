@@ -9,7 +9,7 @@ defmodule SignalAirWeb.Monitoring.EntrepriseLive do
         <h1><%= gettext "Surveillance temps-réel" %></h1>
 
         <h2><%= gettext "Carte" %> <a class="btn btn-primary mb-3" onclick="$component.recupererGeolocalisation()"><i class="bi bi-geo-alt"></i></a></h2>
-        <section class="row" phx-update="ignore" phx-hook="GestionnaireCarte">
+        <section id="section-carte" class="row" phx-update="ignore" phx-hook="GestionnaireCarte">
           <div id="carte" style="height: 400px">
           </div>
         </section>
@@ -57,36 +57,43 @@ defmodule SignalAirWeb.Monitoring.EntrepriseLive do
               }.bind(this))
             }
           });
-          let Hooks = {};
-          window.liveSocket.hooks.GestionnaireCarte = {
-            mounted() {
-              const gestion = ({ signalement }) => {
-                var coords = [signalement.lat, signalement.long];
-                const marker = new L.marker(coords);      
-                marker.addTo($component.carte);
-              };
-          
-              // handle new sightings as they show up
-              this.handleEvent("nouveau_signalement", gestion);
-            },
-          };
+
           $(document).ready(function() {
             $component.ready();
+            liveSocket.hooks.GestionnaireCarte = {
+              mounted() {
+                this.handleEvent("nouveau_signalement", function(signalement) {
+                  console.log("Nouveau signalement reçu !");
+                  let coords = [signalement.lat, signalement.long];
+                  L.circle(coords, {color: 'red', opacity: 0.5, radius: 100, fillColor: '#f03', fillOpacity: 0.5}).addTo($component.carte);
+                });
+              }
+            };
           });
         </script>
 
       """
     end
 
-    def handle_info(%Phoenix.Socket.Broadcast{topic: "global", event: "nouveau_signalement", payload: signalement}, %{signalements: signalements} = socket) do
-      {:noreply, 
-        socket 
-          |> push_event("nouveau_signalement", signalement)
-          |> assign(:signalements, [signalement | signalements])
-      }
+    def handle_info(msg, %{assigns: %{signalements: signalements}} = socket) do
+      case msg do
+        %Phoenix.Socket.Broadcast{
+          topic: "global", 
+          event: "nouveau_signalement", 
+          payload: signalement
+        } -> {:noreply, 
+            socket 
+              |> assign(:signalements, [signalement | signalements])
+              |> push_event("nouveau_signalement", signalement)
+          }
+        _ -> {:noreply, socket}
+      end
+
     end
+    
 
     def handle_event(event, _params, socket) do
+      IO.inspect(event)
       {:noreply, socket}
     end
 

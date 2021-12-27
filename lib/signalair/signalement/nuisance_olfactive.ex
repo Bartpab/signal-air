@@ -2,6 +2,7 @@ defmodule SignalAir.Signalement.NuisanceOlfactive do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:cree_le, :intensite_odeur, :lat, :long, :type_odeur]}
   schema "signalement_nuisances_olfactives" do
     field :cree_le, :naive_datetime
     field :intensite_odeur, :integer
