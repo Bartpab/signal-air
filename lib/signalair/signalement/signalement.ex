@@ -1,5 +1,6 @@
 defmodule SignalAir.Signalement do
     alias SignalAir.Signalement.NuisanceOlfactive
+    alias SignalAir.Signalement.Vue
     alias SignalAir.Signalement
 
     import Ecto.Query, warn: false
@@ -9,12 +10,13 @@ defmodule SignalAir.Signalement do
     import Ecto.Changeset
   
     @derive {Jason.Encoder, only: [:lat, :long, :type, :signaler_par_id, :cree_le]}
-    schema "signalement" do
+    schema "signalements" do
       field :lat, :float
       field :long, :float
       field :type, :string
       field :signaler_par_id, :string
       has_one :odeur, SignalAir.Signalement.NuisanceOlfactive
+      has_many :vues, SignalAir.Signalement.Vue
       timestamps(inserted_at: :cree_le)
     end
   
@@ -31,6 +33,16 @@ defmodule SignalAir.Signalement do
         |> Repo.insert
     end
 
+    defp notifie_nouveau_signalement(signalement) do
+        SignalAirWeb.Endpoint.broadcast("global", "nouveau_signalement", signalement) 
+        {:ok, signalement}
+    end
+
+    defp notifie_nouvelle_vue(signalement) do
+        SignalAirWeb.Endpoint.broadcast("global", "vu_par", vue) 
+        {:ok, signalement}
+    end
+
     def creer_nuisance_olfactive(attrs \\ %{}) do
         with {:ok, signalement} <- attrs |> Map.put("type", "nuisance_olfactive") |> creer,
             {:ok, _} <- %NuisanceOlfactive{signalement_id: signalement.id} 
@@ -40,15 +52,33 @@ defmodule SignalAir.Signalement do
                         |> Map.delete("long")
                         |> Map.delete("signaler_par_id")
                 ) |> Repo.insert,
-        do: recuperer(signalement.id)
+            {:ok, signalement} <- recuperer(signalement.id)
+        do
+            signalement |> notifie_nouveau_signalement
+        end
     end
 
-    defp preload_specs(req) do
-        req |> Repo.preload(:odeur)
+    def ajouter_vu_par(signalement_id, client_id) do
+        unless [] = Vue |> where([vue], vue.signalement_id == ^signalement_id and vue.vu_par_id == ^client_id) |> Repo.all do
+            with :ok <- %Vue{signalement_id: signalement_id, vu_par_id: client_id}
+                |> Repo.insert
+                |> elem(1)
+            do
+
+            end
+        else
+            :ok
+        end
+    end
+
+    defp précharger_associations(req) do
+        req 
+            |> Repo.preload(:odeur) 
+            |> Repo.preload(:vues)
     end
 
     def recuperer(id) do
-        case Signalement |> Repo.get(id) |> preload_specs do
+        case Signalement |> Repo.get(id) |> précharger_associations do
             nil -> {:error, "Aucun résultat trouvé."}
             signalement -> {:ok, signalement}
         end
@@ -61,6 +91,6 @@ defmodule SignalAir.Signalement do
             _ -> &1
         end).()
         |> Repo.all
-        |> preload_specs
+        |> précharger_associations
     end
 end

@@ -24,16 +24,15 @@ defmodule SignalAirWeb.Surveillance.CitoyenLive do
       """
     end
 
-    def handle_info(msg, %{assigns: %{signalements: signalements}} = socket) do
+    def handle_info(msg, %{assigns: %{signalements: signalements, client_id: client_id}} = socket) do
       case msg do
-        %Phoenix.Socket.Broadcast{
-          topic: "global", 
-          event: "nouveau_signalement", 
-          payload: signalement
-        } -> {:noreply, 
+        %{topic: "global", event: "nouveau_signalement", payload: signalement} -> {:noreply, 
             socket 
-              |> assign(:signalements, [signalement | signalements])
-              |> push_event("nouveau_signalement", signalement)
+              |> (&
+                if signalement.signaler_par_id == client_id do 
+                  &1 |> assign(:signalements, [signalement | signalements])
+                else &1 end
+              ).()
           }
         _ -> {:noreply, socket}
       end
@@ -48,7 +47,11 @@ defmodule SignalAirWeb.Surveillance.CitoyenLive do
       if connected?(socket) do
         Phoenix.PubSub.subscribe(SignalAir.PubSub, "global")
       end
-      {:ok, socket |> assign(:signalements, Signalement.liste(signaler_par: client_id))}
+      {:ok, 
+        socket
+          |> assign(:client_id, client_id) 
+          |> assign(:signalements, Signalement.liste(signaler_par: client_id))
+      }
     end
 
 end

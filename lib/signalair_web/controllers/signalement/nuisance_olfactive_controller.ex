@@ -7,7 +7,6 @@ defmodule SignalAirWeb.Signalement.NuisanceOlfactiveController do
     def create(conn, %{"nuisance_olfactive" => nuisance_olfactive_params}) do
       case nuisance_olfactive_params |> Map.put("signaler_par_id", conn.assigns[:client_id]) |> Signalement.creer_nuisance_olfactive do
         {:ok, nuisance_olfactive} ->
-          SignalAirWeb.Endpoint.broadcast("global", "nouveau_signalement", nuisance_olfactive)
           conn
             |> put_flash(:info, "Signalement crée avec succès.")
             |> redirect(to: Routes.live_path(conn, SignalAirWeb.Surveillance.CitoyenLive))

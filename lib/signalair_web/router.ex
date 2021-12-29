@@ -22,10 +22,12 @@ defmodule SignalAirWeb.Router do
     get "/", PageController, :index
 
     scope "/surveillance", Surveillance do
-      live "/exploitant", ExploitantLive
+      
       live_session :client, session: {SignalAir.Plugs.ClientId, :inject_in_live, []} do
+        live "/exploitant", ExploitantLive
         live "/mes-signalements", CitoyenLive
       end
+      
     end
     scope "/signalement", Signalement do
       get  "/nuisance-olfactive/nouveau", NuisanceOlfactiveController, :new
