@@ -16,8 +16,8 @@
                 <div class="row  mb-3">
                     <label for="adresse" class="col-form-label col-2"><%= gettext "Type d'odeur" %></label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="_type_odeur" style="display: none" name="type_odeur" onkeydown="$component.verifierFormulaire()" />
-                        <%= select f, :type_odeur, @type_odeurs, prompt: [key: "Choisir une odeur", value: ""], id: "type_odeur", class: "form-select", onchange: "$component.verifierFormulaire()" %>
+                        <input type="text" class="form-control" id="_type" style="display: none" name="type" onkeydown="$component.verifierFormulaire()" />
+                        <%= select f, :type, @types, prompt: [key: "Choisir une odeur", value: ""], id: "type", class: "form-select", onchange: "$component.verifierFormulaire()" %>
                     </div>
                     <div class="form-check form-switch col-sm-1">
                         <input class="form-check-input" type="checkbox" role="switch" onclick="$component.basculerAutreOdeur()" id="interupteurAutreOdeur">
@@ -28,7 +28,7 @@
                 <div class="row  mb-3">
                     <label for="adresse" class="col-form-label col-2"><%= gettext "Intensité de l'odeur" %></label>
                     <div class="col-sm-8">
-                        <%= select f, :intensite_odeur, @intensites_odeur, prompt: [key: "Choisir une intensité", value: ""], id: "intensite_odeur", class: "form-select", onchange: "$component.verifierFormulaire()" %>
+                        <%= select f, :intensite, @intensites, prompt: [key: "Choisir une intensité", value: ""], id: "intensite", class: "form-select", onchange: "$component.verifierFormulaire()" %>
                     </div>
                 </div>
 
@@ -46,12 +46,12 @@
                     <legend class="col-form-label col-sm-2 pt-0">Checklist</legend>
                     <div class="col-sm-10">
                         <div class="form-check">
-                            <input type="checkbox" id="intensite_odeur-check" class="form-check-input" onclick="return false;" readonly/>
-                            <label class="form-check-label" for="type_odeur-check"><%= gettext "Intensité de l'odeur remplie" %></label>
+                            <input type="checkbox" id="intensite-check" class="form-check-input" onclick="return false;" readonly/>
+                            <label class="form-check-label" for="type-check"><%= gettext "Intensité de l'odeur remplie" %></label>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" id="type_odeur-check" class="form-check-input" onclick="return false;" readonly/>
-                            <label class="form-check-label" for="type_odeur-check"><%= gettext "Type d'odeur remplie" %></label>
+                            <input type="checkbox" id="type-check" class="form-check-input" onclick="return false;" readonly/>
+                            <label class="form-check-label" for="type-check"><%= gettext "Type d'odeur remplie" %></label>
                         </div>
                         <div class="form-check">
                             <input type="checkbox" id="geolocalisation-check" class="form-check-input" onclick="return false;" readonly/>
@@ -66,11 +66,11 @@
 </div>
 <script type="text/javascript"> 
 let $component = Object.create({
-    autre_odeur: false,
-    sauvegarde_html_odeur: "",
+    autre: false,
+    sauvegarde_html: "",
     async ready() {
         $("#erreur-geolocalisation").hide();
-        $("#__type_odeur").hide();
+        $("#__type").hide();
 
         $("#adresse").autocomplete({
             select: async function (event, ui) {
@@ -99,17 +99,17 @@ let $component = Object.create({
     },
 
     basculerAutreOdeur() {
-        let old = $("#type_odeur");
-        let _new = $("#_type_odeur");
+        let old = $("#type");
+        let _new = $("#_type");
 
-        old.attr('id', '_type_odeur');
+        old.attr('id', '_type');
         old.attr('name', '');
         old.hide();
 
         _new.show();
         _new.focus();
-        _new.attr('name', 'report[type_odeur]')
-        _new.attr('id', 'type_odeur');
+        _new.attr('name', 'report[type]')
+        _new.attr('id', 'type');
 
         this.verifierFormulaire();
     },
@@ -131,20 +131,20 @@ let $component = Object.create({
                     $("#geolocalisation-check").prop("checked", true);
                 }
             }, {
-                is_ok: $("#type_odeur").val() != "",
+                is_ok: $("#type").val() != "",
                 on_nok: function () {
-                    $("#type_odeur-check").prop("checked", false);
+                    $("#type-check").prop("checked", false);
                 },
                 on_ok: function () {
-                    $("#type_odeur-check").prop("checked", true);
+                    $("#type-check").prop("checked", true);
                 }                
             }, {
-                is_ok: $("#intensite_odeur").val() != "",
+                is_ok: $("#intensite").val() != "",
                 on_nok: function () {
-                    $("#intensite_odeur-check").prop("checked", false);
+                    $("#intensite-check").prop("checked", false);
                 },
                 on_ok: function () {
-                    $("#intensite_odeur-check").prop("checked", true);
+                    $("#intensite-check").prop("checked", true);
                 }                
             }
         ];

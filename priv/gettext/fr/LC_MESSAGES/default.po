@@ -22,13 +22,13 @@ msgid "Autre"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/signalair_web/controllers/monitoring/entreprise_live.ex:11
+#: lib/signalair_web/controllers/monitoring/exploitant_live.ex:11
 msgid "Carte"
 msgstr ""
 
 #, elixir-format, ex-autogen
 #: lib/SignalAir_web/templates/report/nuisance_olfactive/list.html.heex:1
-#: lib/signalair_web/controllers/monitoring/entreprise_live.ex:17
+#: lib/signalair_web/controllers/monitoring/exploitant_live.ex:17
 msgid "Derniers signalements"
 msgstr ""
 
@@ -58,7 +58,7 @@ msgid "Signaler une nuisance olfactive"
 msgstr "Signaler une nuisance"
 
 #, elixir-format, ex-autogen
-#: lib/signalair_web/controllers/monitoring/entreprise_live.ex:9
+#: lib/signalair_web/controllers/monitoring/exploitant_live.ex:9
 msgid "Surveillance temps-réel"
 msgstr ""
 

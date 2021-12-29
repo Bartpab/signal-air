@@ -4,6 +4,8 @@ defmodule SignalAirWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
+    plug SignalAir.Plugs.SessionId
+    plug SignalAir.Plugs.ClientId
     plug :fetch_live_flash
     plug :put_root_layout, {SignalAirWeb.LayoutView, :root}
     plug :protect_from_forgery
@@ -19,10 +21,13 @@ defmodule SignalAirWeb.Router do
 
     get "/", PageController, :index
 
-    scope "/surveillance", Monitoring do
-      live "/entreprise", EntrepriseLive
+    scope "/surveillance", Surveillance do
+      live "/exploitant", ExploitantLive
+      live_session :client, session: {SignalAir.Plugs.ClientId, :inject_in_live, []} do
+        live "/mes-signalements", CitoyenLive
+      end
     end
-    scope "/signalement", Report do
+    scope "/signalement", Signalement do
       get  "/nuisance-olfactive/nouveau", NuisanceOlfactiveController, :new
       post "/nuisance-olfactive/nouveau", NuisanceOlfactiveController, :create
     end
