@@ -29,14 +29,20 @@ defmodule SignalAir.Signalement do
 
     def ajouter_vu_par(signalement_id, client_id) do
         vue = %VueSignalement{signalement_id: signalement_id, vu_par_id: client_id}
-        with false <- @repo.existe?(vue),
-            {:ok, vue} <- @repo.créer(vue) 
+        with [] <- @repo.liste(VueSignalement, where: fn(x) -> x.signalement_id == signalement_id and x.vu_par_id == client_id end),
+            {:ok, vue} <- @repo.créer(vue),
+            {:ok, signalement} <- récupérer(signalement_id),
+            :ok <- modifier(signalement.id, nb_vues: signalement.nb_vues + 1)
         do
             notifier(:nouvelle_vue, vue)
         end
     end
 
-    def recuperer(id) do
+    def modifier(id, modifications) do
+        __MODULE__ |> @repo.modifier(id, modifications)
+    end
+
+    def récupérer(id) do
         __MODULE__ |> @repo.récupérer(id)
     end
 

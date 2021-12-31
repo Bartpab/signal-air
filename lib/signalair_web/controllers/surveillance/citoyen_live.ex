@@ -14,8 +14,8 @@ defmodule SignalAirWeb.Surveillance.CitoyenLive do
             case signalement.stype do
               "nuisance_olfactive" -> "Nuisance Olfactive"
               _ -> "Nuisance"
-            end
-          %></h5>
+            end 
+          %> | Vues: <%= signalement.nb_vues %></h5>
           <h6 class="card-subtitle mb-2 text-muted"><%= signalement.intensite %> | <%= signalement.cree_le %></h6>
           <p class="card-text"><%= signalement.type %></p>
           </div>
@@ -34,9 +34,9 @@ defmodule SignalAirWeb.Surveillance.CitoyenLive do
                 else &1 end
               ).()
           }
+        %{topic: "global", event: "vu_par", payload: vue} -> {:noreply, socket |> assign(:signalements, Signalement.liste(signaler_par_id: client_id))}
         _ -> {:noreply, socket}
       end
-
     end
 
     def handle_event(event, _params, socket) do

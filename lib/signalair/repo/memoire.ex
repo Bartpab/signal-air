@@ -22,7 +22,7 @@ defmodule SignalAir.Repo.Memoire do
     end
 
     @impl true
-    def handle_call({cmd, type_entité, entité}, _from, état) when cmd == :créer do
+    def handle_call({cmd, type_entité, entité}, _from, état) when cmd == :creer do
         état = état |> assurer_table(type_entité)
         dernier_id = état[type_entité][:dernier_id]
         entité = entité |> Map.put(:id, dernier_id + 1)
@@ -35,15 +35,39 @@ defmodule SignalAir.Repo.Memoire do
     end
 
     @impl true
+    def handle_call({cmd, type_entité, id, modifications}, _from, état) when cmd == :modifier do
+        état = état |> assurer_table(type_entité)
+
+        table = état[type_entité]
+        entrées = table[:entrées] 
+        |> Enum.map(fn (x) -> 
+            if x.id == id do
+                Enum.reduce modifications, x, fn ({k, v}, acc) -> acc |> Map.put(k, v) end
+            else
+                x
+            end
+        end)
+        table = table |> Map.put(:entrées, entrées)
+        état = état |> Map.put(type_entité, table)
+        {:reply, :ok, état}
+    end
+
+    @impl true
     def handle_call({cmd, type_entité, entité}, _from, état) when cmd == :existe do
         état = état |> assurer_table(type_entité)
         {:reply, état[type_entité][:entrées] |> Enum.any?((& &1.id == entité.id)), état}
     end
 
     @impl true
-    def handle_call({cmd, type_entité, entité}, _from, état) when cmd == :récupérer do
+    def handle_call({cmd, type_entité, id}, _from, état) when cmd == :recuperer do
         état = état |> assurer_table(type_entité)  
-        {:reply, état[type_entité][:entrées] |> Enum.find((& &1.id == entité.id)), état}
+        result = état[type_entité][:entrées] |> Enum.find((& &1.id == id))
+
+        if result == nil do
+            {:reply, {:error, :not_found}, état}
+        else
+            {:reply, {:ok, result}, état}
+        end
     end
 
     @impl true
@@ -65,7 +89,11 @@ defmodule SignalAir.Repo.Memoire do
 
     def créer(%type_entité{} = entité, opts \\ []) when is_struct(entité) do
         type_entité = Keyword.get(opts, :as, type_entité)
-        GenServer.call(__MODULE__, {:créer, type_entité, entité})
+        GenServer.call(__MODULE__, {:creer, type_entité, entité})
+    end
+
+    def modifier(type_entité, id, modifications) do
+        GenServer.call(__MODULE__, {:modifier, type_entité, id, modifications})
     end
 
     def drop() do
@@ -77,9 +105,9 @@ defmodule SignalAir.Repo.Memoire do
         GenServer.call(__MODULE__, {:liste, type_entité, opts})
     end
 
-    def récupérer(%type_entité{}, id, opts \\ []) do
+    def récupérer(type_entité, id, opts \\ []) do
         type_entité = Keyword.get(opts, :as, type_entité)
-        GenServer.call(__MODULE__, {:récupérer, type_entité, id})
+        GenServer.call(__MODULE__, {:recuperer, type_entité, id})
     end
 
     def existe?(%type_entité{} = entité, opts \\ []) do
