@@ -9,7 +9,9 @@ defmodule SignalAir.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      SignalAir.Repo,
+      # SignalAir.Repo.Ecto,
+      # Start the memory repository
+      SignalAir.Repo.Memoire,
       # Start the Telemetry supervisor
       SignalAirWeb.Telemetry,
       # Start the PubSub system
@@ -24,6 +26,11 @@ defmodule SignalAir.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: SignalAir.Supervisor]
     Supervisor.start_link(children, opts)
+
+  end
+
+  @impl true
+  def stop(_state) do
   end
 
   # Tell Phoenix to update the endpoint configuration

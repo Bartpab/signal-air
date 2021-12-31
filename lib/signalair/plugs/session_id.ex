@@ -13,7 +13,7 @@ defmodule SignalAir.Plugs.SessionId do
           session_id = unique_session_id()
           put_session(conn, :session_id, session_id)
   
-        session_id ->
+        _session_id ->
           conn
       end
     end

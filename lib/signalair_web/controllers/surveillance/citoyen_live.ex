@@ -11,13 +11,13 @@ defmodule SignalAirWeb.Surveillance.CitoyenLive do
         <div class="card" {[id: "signalement_#{signalement.id}"]} >
           <div class="card-body">
           <h5 class="card-title"><%= 
-            case signalement.type do
+            case signalement.stype do
               "nuisance_olfactive" -> "Nuisance Olfactive"
               _ -> "Nuisance"
             end
           %></h5>
-          <h6 class="card-subtitle mb-2 text-muted"><%= signalement.odeur.intensite %> | <%= signalement.cree_le %></h6>
-          <p class="card-text"><%= signalement.odeur.type %></p>
+          <h6 class="card-subtitle mb-2 text-muted"><%= signalement.intensite %> | <%= signalement.cree_le %></h6>
+          <p class="card-text"><%= signalement.type %></p>
           </div>
         </div>
       <% end %>
@@ -47,10 +47,11 @@ defmodule SignalAirWeb.Surveillance.CitoyenLive do
       if connected?(socket) do
         Phoenix.PubSub.subscribe(SignalAir.PubSub, "global")
       end
+
       {:ok, 
         socket
           |> assign(:client_id, client_id) 
-          |> assign(:signalements, Signalement.liste(signaler_par: client_id))
+          |> assign(:signalements, Signalement.liste(signaler_par_id: client_id))
       }
     end
 

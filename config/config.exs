@@ -8,7 +8,8 @@
 import Config
 
 config :SignalAir,
-  ecto_repos: [SignalAir.Repo]
+  ecto_repos: [], #[SignalAir.Repo.Ecto],
+  repo: SignalAir.Repo.Memoire
 
 config :SignalAir, SignalAir.Gettext,
   default_locale: "fr"

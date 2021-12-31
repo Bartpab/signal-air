@@ -3,9 +3,11 @@ defmodule SignalAirWeb.Signalement.NuisanceOlfactiveControllerTest do
     
     @create_attrs %{long: 0.0, lat: 0.0, type: "Une odeur", intensite: 3}
     @expected_attrs %{
-      long: 0.0, lat: 0.0, 
-      type: "nuisance_olfactive",
-      odeur: %{type: "Une odeur", intensite: 3}, 
+      long: 0.0, 
+      lat: 0.0, 
+      stype: "nuisance_olfactive",
+      type: "Une odeur", 
+      intensite: 3, 
       signaler_par_id: "user:123"
     }
     
