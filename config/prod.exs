@@ -18,6 +18,7 @@ config :SignalAir, SignalAirWeb.Endpoint,
     http: [port: {:system, "PORT"}],
     url: [host: System.get_env("APP_NAME")],
     secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
+    check_origin: ["//*.gigalixirapp.com"],
     server: true
 
 config :SignalAir, SignalAir.Repo,
