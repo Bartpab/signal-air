@@ -4,7 +4,7 @@
       <%= gettext "Bienvenue sur %{name} !", name: "Signal'Air" %>
     </h1>
     <p class="lead text-muted">
-      <%= gettext "Plateforme de signalement des nuisances liées à la qualité de l'air." %>
+      <%= gettext "Plateforme de signalement des nuisances liées à la qualité de l'air. " %>
     </p>
     <p>
         <%= link "Signaler", to: Routes.nuisance_olfactive_path(@conn, :new), class: "btn btn-primary"  %>
