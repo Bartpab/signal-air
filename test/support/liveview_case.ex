@@ -1,4 +1,4 @@
-defmodule SignalAirWeb.LiveViewConnCase do
+defmodule SignalNuisanceWeb.LiveViewConnCase do
     @moduledoc """
     This module defines the test case to be used by
     tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule SignalAirWeb.LiveViewConnCase do
     we enable the SQL sandbox, so changes done to the database
     are reverted at the end of every test. If you are using
     PostgreSQL, you can even run database tests asynchronously
-    by setting `use SignalAirWeb.ConnCase, async: true`, although
+    by setting `use SignalNuisanceWeb.ConnCase, async: true`, although
     this option is not recommended for other databases.
     """
   
@@ -23,18 +23,18 @@ defmodule SignalAirWeb.LiveViewConnCase do
         import Plug.Conn
         import Phoenix.ConnTest
         import Phoenix.LiveViewTest
-        import SignalAirWeb.ConnCase
+        import SignalNuisanceWeb.ConnCase
   
-        alias SignalAirWeb.Router.Helpers, as: Routes
+        alias SignalNuisanceWeb.Router.Helpers, as: Routes
   
         # The default endpoint for testing
-        @endpoint SignalAirWeb.Endpoint
+        @endpoint SignalNuisanceWeb.Endpoint
       end
     end
   
     setup _tags do
-      # pid = Ecto.Adapters.SQL.Sandbox.start_owner!(SignalAir.Repo, shared: not tags[:async])
-      on_exit(fn -> SignalAir.Repo.Memoire.drop() end)
+      # pid = Ecto.Adapters.SQL.Sandbox.start_owner!(SignalNuisance.Repo, shared: not tags[:async])
+      on_exit(fn -> SignalNuisance.Repo.Memoire.drop() end)
       {:ok, conn: Phoenix.ConnTest.build_conn()}
     end
   end

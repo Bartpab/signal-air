@@ -1,4 +1,4 @@
-# SignalAir
+# SignalNuisance
 
 To start your Phoenix server:
 

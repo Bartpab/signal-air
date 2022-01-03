@@ -7,18 +7,23 @@
 # General application configuration
 import Config
 
-config :SignalAir,
-  ecto_repos: [], #[SignalAir.Repo.Ecto],
-  repo: SignalAir.Repo.Memoire
+config :SignalNuisance,
+  ecto_repos: [], #[SignalNuisance.Repo.Ecto],
+  repo: SignalNuisance.Repo.Memoire
 
-config :SignalAir, SignalAir.Gettext,
+config :SignalNuisance, SignalNuisance.Gettext,
   default_locale: "fr"
 
+config :SignalNuisance, Timex.Gettext, 
+  default_locale: "fr"
+
+config :gettext, default_locale: "fr"
+
 # Configures the endpoint
-config :SignalAir, SignalAirWeb.Endpoint,
+config :SignalNuisance, SignalNuisanceWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: SignalAirWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: SignalAir.PubSub,
+  render_errors: [view: SignalNuisanceWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: SignalNuisance.PubSub,
   live_view: [signing_salt: "ylakDY2H"]
 
 # Configures the mailer
@@ -28,7 +33,7 @@ config :SignalAir, SignalAirWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :SignalAir, SignalAir.Mailer, adapter: Swoosh.Adapters.Local
+config :SignalNuisance, SignalNuisance.Mailer, adapter: Swoosh.Adapters.Local
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false

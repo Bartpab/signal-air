@@ -12,67 +12,67 @@ msgstr ""
 "Plural-Forms: nplurals=2\n"
 
 #, elixir-format, ex-autogen
-#: lib/SignalAir_web/templates/report/nuisance_olfactive/new.html.heex:36
+#: lib/SignalNuisance_web/templates/report/nuisance_olfactive/new.html.heex:36
 msgid "Adresse"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/SignalAir_web/templates/report/nuisance_olfactive/new.html.heex:24
+#: lib/SignalNuisance_web/templates/report/nuisance_olfactive/new.html.heex:24
 msgid "Autre"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/signalair_web/controllers/monitoring/exploitant_live.ex:11
+#: lib/signalnuisance_web/controllers/monitoring/exploitant_live.ex:11
 msgid "Carte"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/SignalAir_web/templates/report/nuisance_olfactive/list.html.heex:1
-#: lib/signalair_web/controllers/monitoring/exploitant_live.ex:17
+#: lib/SignalNuisance_web/templates/report/nuisance_olfactive/list.html.heex:1
+#: lib/signalnuisance_web/controllers/monitoring/exploitant_live.ex:17
 msgid "Derniers signalements"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/SignalAir_web/templates/report/nuisance_olfactive/new.html.heex:62
+#: lib/SignalNuisance_web/templates/report/nuisance_olfactive/new.html.heex:62
 msgid "Envoyer"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/SignalAir_web/templates/report/nuisance_olfactive/new.html.heex:29
+#: lib/SignalNuisance_web/templates/report/nuisance_olfactive/new.html.heex:29
 msgid "Intensité de l'odeur"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/SignalAir_web/templates/report/nuisance_olfactive/new.html.heex:50
+#: lib/SignalNuisance_web/templates/report/nuisance_olfactive/new.html.heex:50
 msgid "Intensité de l'odeur remplie"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/SignalAir_web/templates/report/nuisance_olfactive/new.html.heex:58
+#: lib/SignalNuisance_web/templates/report/nuisance_olfactive/new.html.heex:58
 msgid "Localisation remplie"
 msgstr ""
 
 #, elixir-format, ex-autogen, fuzzy
-#: lib/SignalAir_web/templates/report/nuisance_olfactive/new.html.heex:1
+#: lib/SignalNuisance_web/templates/report/nuisance_olfactive/new.html.heex:1
 msgid "Signaler une nuisance olfactive"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/signalair_web/controllers/monitoring/exploitant_live.ex:9
+#: lib/signalnuisance_web/controllers/monitoring/exploitant_live.ex:9
 msgid "Surveillance temps-réel"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/SignalAir_web/templates/report/nuisance_olfactive/new.html.heex:17
+#: lib/SignalNuisance_web/templates/report/nuisance_olfactive/new.html.heex:17
 msgid "Type d'odeur"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/SignalAir_web/templates/report/nuisance_olfactive/new.html.heex:54
+#: lib/SignalNuisance_web/templates/report/nuisance_olfactive/new.html.heex:54
 msgid "Type d'odeur remplie"
 msgstr ""
 
 #, elixir-format, ex-autogen
-#: lib/SignalAir_web/templates/page/index.html.heex:2
+#: lib/SignalNuisance_web/templates/page/index.html.heex:2
 msgid "Bienvenue sur %{name} !"
 msgstr ""

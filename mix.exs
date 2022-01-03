@@ -1,9 +1,9 @@
-defmodule SignalAir.MixProject do
+defmodule SignalNuisance.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :SignalAir,
+      app: :SignalNuisance,
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule SignalAir.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {SignalAir.Application, []},
+      mod: {SignalNuisance.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -36,8 +36,7 @@ defmodule SignalAir.MixProject do
       {:phoenix, "~> 1.6.5"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
-      {:etso, "~> 0.1.6"},
-      {:amnesia, "~> 0.2.8"},
+      {:timex, "~> 3.7"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.17.5"},

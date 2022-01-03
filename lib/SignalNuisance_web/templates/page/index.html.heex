@@ -1,0 +1,16 @@
+<section class="jumbotron text-center">
+  <div class="container">
+    <h1 class="jumbotron-heading">
+      <%= gettext "Bienvenue sur %{name} !", name: "Signal'Nuisance" %>
+    </h1>
+    <p class="lead text-muted">
+      <%= gettext "Plateforme de signalement des nuisances liées à la qualité de l'air. " %>
+    </p>
+    <p>
+        <%= link "Signaler", to: Routes.nuisance_olfactive_path(@conn, :new), class: "btn btn-primary"  %>
+        <%= link "Mes signalements", to: Routes.live_path(@conn, SignalNuisanceWeb.Surveillance.CitoyenLive), class: "btn btn-secondary" %>
+        <%= link "Surveiller", to: Routes.live_path(@conn, SignalNuisanceWeb.Surveillance.ExploitantLive), class: "btn btn-secondary" %>
+    </p>
+  </div>
+</section>
+

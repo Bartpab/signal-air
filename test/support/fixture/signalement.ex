@@ -1,6 +1,6 @@
-defmodule SignalAir.Fixture.Signalement.NuisanceOlfactive do
+defmodule SignalNuisance.Fixture.Signalement.NuisanceOlfactive do
     def nouveau(opts \\ []) do
-        obj = %SignalAir.Signalement.NuisanceOlfactive {
+        obj = %SignalNuisance.Signalement.NuisanceOlfactive {
             long: 0.0, 
             lat:  0.0, 
             type: "Une odeur", 
@@ -13,7 +13,7 @@ defmodule SignalAir.Fixture.Signalement.NuisanceOlfactive do
     end
 
     def existant(opts \\ []) do
-        obj = struct SignalAir.Signalement.NuisanceOlfactive, %{
+        obj = struct SignalNuisance.Signalement.NuisanceOlfactive, %{
             long: 0.0, 
             lat: 0.0,
             stype: "nuisance_olfactive", 

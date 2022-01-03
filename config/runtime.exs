@@ -9,14 +9,14 @@ import Config
 
 # Start the phoenix server if environment is set and running in a  release
 if System.get_env("PHX_SERVER") && System.get_env("RELEASE_NAME") do
-  config :SignalAir, SignalAirWeb.Endpoint, server: true
+  config :SignalNuisance, SignalNuisanceWeb.Endpoint, server: true
 end
 
 if config_env() == :prod do
   database_path =
     System.get_env("DATABASE_PATH") || ""
 
-  config :SignalAir, SignalAir.Repo,
+  config :SignalNuisance, SignalNuisance.Repo,
     database: database_path,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5")
 
@@ -35,7 +35,7 @@ if config_env() == :prod do
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
-  config :SignalAir, SignalAirWeb.Endpoint,
+  config :SignalNuisance, SignalNuisanceWeb.Endpoint,
     url: [host: host, port: 443],
     http: [
       # Enable IPv6 and bind on all interfaces.
@@ -52,7 +52,7 @@ if config_env() == :prod do
   # If you are doing OTP releases, you need to instruct Phoenix
   # to start each relevant endpoint:
   #
-  #     config :SignalAir, SignalAirWeb.Endpoint, server: true
+  #     config :SignalNuisance, SignalNuisanceWeb.Endpoint, server: true
   #
   # Then you can assemble a release by calling `mix release`.
   # See `mix help release` for more information.
@@ -63,7 +63,7 @@ if config_env() == :prod do
   # Also, you may need to configure the Swoosh API client of your choice if you
   # are not using SMTP. Here is an example of the configuration:
   #
-  #     config :SignalAir, SignalAir.Mailer,
+  #     config :SignalNuisance, SignalNuisance.Mailer,
   #       adapter: Swoosh.Adapters.Mailgun,
   #       api_key: System.get_env("MAILGUN_API_KEY"),
   #       domain: System.get_env("MAILGUN_DOMAIN")
