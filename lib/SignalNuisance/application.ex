@@ -10,6 +10,7 @@ defmodule SignalNuisance.Application do
     children = [
       # Start the Ecto repository
       # SignalNuisance.Repo.Ecto,
+      SignalNuisance.Scheduler,
       # Start the memory repository
       SignalNuisance.Repo.Memoire,
       # Start the Telemetry supervisor
@@ -25,8 +26,9 @@ defmodule SignalNuisance.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: SignalNuisance.Supervisor]
-    Supervisor.start_link(children, opts)
-
+    ret = Supervisor.start_link(children, opts)
+    SignalNuisance.Task.Installer.install()
+    ret
   end
 
   @impl true

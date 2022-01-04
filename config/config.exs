@@ -19,6 +19,12 @@ config :SignalNuisance, Timex.Gettext,
 
 config :gettext, default_locale: "fr"
 
+# Configures the scheduler
+config :SignalNuisance, SignalNuisance.Scheduler,
+  jobs: [
+    {"@daily", {SignalNuisance.Task.Installer, :reinstall, []}}
+  ]
+
 # Configures the endpoint
 config :SignalNuisance, SignalNuisanceWeb.Endpoint,
   url: [host: "localhost"],
