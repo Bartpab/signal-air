@@ -13,22 +13,22 @@ defmodule SignalNuisanceWeb.Surveillance.CitoyenLive do
         </div>
       <% end %>
       <%= for signalement <- @signalements do %>
-        <SignalNuisance.Component.Signalement.entrée signalement={signalement}/>
+        <.live_component module={SignalNuisance.Component.Signalement} id={"signalement_#{signalement.id}"} client={@client} signalement={signalement} />
       <% end %>
       """
     end
 
-    def handle_info(msg, %{assigns: %{signalements: signalements, client_id: client_id}} = socket) do
+    def handle_info(msg, %{assigns: %{signalements: signalements, client: client}} = socket) do
       case msg do
         %{topic: "global", event: "nouveau_signalement", payload: signalement} -> {:noreply, 
             socket 
               |> (&
-                if signalement.signaler_par_id == client_id do 
+                if signalement.signaler_par_id == client.id do 
                   &1 |> assign(:signalements, [signalement | signalements])
                 else &1 end
               ).()
           }
-        %{topic: "global", event: "vu_par", payload: vue} -> {:noreply, socket |> assign(:signalements, Signalement.liste(signaler_par_id: client_id))}
+        %{topic: "global", event: "vu_par", payload: vue} -> {:noreply, socket |> assign(:signalements, Signalement.liste(signaler_par_id: client.id))}
         _ -> {:noreply, socket}
       end
     end
@@ -37,15 +37,15 @@ defmodule SignalNuisanceWeb.Surveillance.CitoyenLive do
       {:noreply, socket}
     end
 
-    def mount(_params, %{"client_id" => client_id} = session, socket) do
+    def mount(_params, %{"client" => client} = _session, socket) do
       if connected?(socket) do
         Phoenix.PubSub.subscribe(SignalNuisance.PubSub, "global")
       end
 
       {:ok, 
         socket
-          |> assign(:client_id, client_id) 
-          |> assign(:signalements, Signalement.liste(signaler_par_id: client_id))
+          |> assign(:client, client) 
+          |> assign(:signalements, Signalement.liste(signaler_par_id: client.id))
       }
     end
 

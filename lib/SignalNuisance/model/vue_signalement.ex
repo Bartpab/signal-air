@@ -5,5 +5,6 @@ defmodule SignalNuisance.VueSignalement do
         vu_le: :naive_datetime
     }
     
-    defstruct id: nil, signalement_id: nil, vu_par_id: nil, vue_le: DateTime.now!("Etc/UTC")
+    defstruct id: nil, signalement_id: nil, vu_par_id: nil, vue_le: Timex.now()
+
 end

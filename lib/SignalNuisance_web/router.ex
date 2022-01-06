@@ -5,7 +5,7 @@ defmodule SignalNuisanceWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug SignalNuisance.Plugs.SessionId
-    plug SignalNuisance.Plugs.ClientId
+    plug SignalNuisance.Plugs.Client
     plug :fetch_live_flash
     plug :put_root_layout, {SignalNuisanceWeb.LayoutView, :root}
     plug :protect_from_forgery
@@ -23,7 +23,7 @@ defmodule SignalNuisanceWeb.Router do
 
     scope "/surveillance", Surveillance do
       
-      live_session :client, session: {SignalNuisance.Plugs.ClientId, :inject_in_live, []} do
+      live_session :client, session: {SignalNuisance.Plugs.Client, :inject_in_live, []} do
         live "/exploitant", ExploitantLive
         live "/mes-signalements", CitoyenLive
       end

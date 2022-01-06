@@ -5,7 +5,7 @@ defmodule SignalNuisanceWeb.Signalement.NuisanceOlfactiveController do
 
     def create(conn, %{"nuisance_olfactive" => params}) do
       with {:ok, _signalement} <- params
-      |> Map.put("signaler_par_id", conn.assigns[:client_id])
+      |> Map.put("signaler_par_id", conn.assigns.client.id)
       |> Signalement.NuisanceOlfactive.validate
       |> Signalement.créer
         do

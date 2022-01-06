@@ -22,6 +22,11 @@ defmodule SignalNuisance.Signalement do
         {:ok, signalement}
     end
 
+    defp notifier(:modification_signalement, signalement) do
+        SignalNuisanceWeb.Endpoint.broadcast("global", "modification_signalement", signalement) 
+        {:ok, signalement}
+    end
+
     defp notifier(:nouvelle_vue, vue) do
         SignalNuisanceWeb.Endpoint.broadcast("global", "vu_par", vue) 
         :ok
@@ -38,12 +43,21 @@ defmodule SignalNuisance.Signalement do
         end
     end
 
-    def modifier(id, modifications) do
-        __MODULE__ |> @repo.modifier(id, modifications)
+    def modifier(signalement_id, modifications) do
+        ret = __MODULE__ |> @repo.modifier(signalement_id, modifications)
+        notifier(:modification_signalement, récupérer!(signalement_id))
+        ret
     end
 
-    def récupérer(id) do
-        __MODULE__ |> @repo.récupérer(id)
+    def récupérer!(signalement_id) do
+        case __MODULE__ |> @repo.récupérer(signalement_id) do
+            {:ok, signalement} -> signalement
+            _ -> raise "Signalement n° #{signalement_id} non trouvé."
+        end
+    end
+
+    def récupérer(signalement_id) do
+        __MODULE__ |> @repo.récupérer(signalement_id)
     end
 
     def liste(opts \\ []) do
