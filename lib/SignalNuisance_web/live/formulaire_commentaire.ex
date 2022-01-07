@@ -30,10 +30,10 @@ defmodule SignalNuisance.Component.Formulaire.Commentaire do
       """
     end
     
-    def handle_event("sauvegarder", %{"commentaire" => commentaire_params}, %{assigns: %{myself: myself, myparent: myparent, id: id, client: client, parent_id: parent_id}} = socket) do
+    def handle_event("sauvegarder", %{"commentaire" => commentaire_params}, %{assigns: %{client: client, parent_id: parent_id}} = socket) do
       case commentaire_params |> Map.put("parent_id", parent_id) |> Map.put("par_id", client.id) |> SignalNuisance.Commentaire.créer do
         {:ok, commentaire} -> 
-          send_event(socket, myparent, :submitted, %{id: id, parent_id: parent_id, commentaire: commentaire})
+          send self(), {:submitted, commentaire}
           {:noreply, socket}
         {:error, %Ecto.Changeset{} = changeset} -> {:noreply, assign(socket, changeset: changeset)}
       end

@@ -1,6 +1,6 @@
 defmodule SignalNuisance.Component.Signalement do
     use Phoenix.LiveComponent
-
+    
     def mount(socket) do
       {:ok, socket |> assign(:global_id, nil)}
     end   
@@ -14,6 +14,11 @@ defmodule SignalNuisance.Component.Signalement do
     }    
     end
 
+    def handle_event("cloturer", _, %{assigns: %{client: client, signalement: signalement}} = socket) do
+      SignalNuisance.Signalement.cloturer(signalement.id)
+      {:noreply, socket}
+    end
+
     def render(assigns) do
       ~H"""
       <div class="card">
@@ -25,16 +30,21 @@ defmodule SignalNuisance.Component.Signalement do
             end
             %>
           </h5>
-          <h6 class="card-subtitle mb-2 text-muted">Signalé <%= @signalement.cree_le |> Timex.from_now  %> | <%= @signalement.nb_vues %> Vue(s) </h6>
+          <h6 class="card-subtitle mb-2 text-muted">#<%= @signalement.id %> | Signalé <%= @signalement.cree_le |> Timex.from_now  %> | <%= @signalement.nb_vues %> Vue(s) </h6>
           <p class="card-text"><%= case @signalement.stype do
             "nuisance_olfactive" -> "Intensité: #{@signalement.intensite} / 3 | Type: #{@signalement.type}"
             _ -> "Nuisance"
           end
           %></p>
-          <.live_component module={SignalNuisance.LiveComponent.Commentaire.Liste} 
-              id={"commentaires_#{@global_id}"} 
-              client={@client} 
-              parent_id={@global_id} />
+          <%= live_render @socket, SignalNuisance.Commentaire.ListeLive, id: "commentaires_#{@global_id}", 
+                session: %{
+                  "parent_id" =>  @global_id,
+                  "client" => @client
+                } 
+          %>
+        </div>
+        <div class="card-body">
+          <a href="#" class="card-link" phx-click="cloturer" phx-target={@myself}>Cloturer</a>
         </div>
       </div>
       """
