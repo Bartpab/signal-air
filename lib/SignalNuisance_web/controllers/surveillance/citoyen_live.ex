@@ -13,7 +13,11 @@ defmodule SignalNuisanceWeb.Surveillance.CitoyenLive do
         </div>
       <% end %>
       <%= for signalement <- @signalements do %>
-        <.live_component module={SignalNuisance.Component.Signalement} id={"signalement_#{signalement.id}"} client={@client} signalement={signalement} />
+        <.live_component 
+          module={SignalNuisance.Component.Signalement} 
+          id={"signalement_#{signalement.id}"} 
+          client={@client} 
+          signalement={signalement} />
       <% end %>
       """
     end
@@ -28,6 +32,15 @@ defmodule SignalNuisanceWeb.Surveillance.CitoyenLive do
                 else &1 end
               ).()
           }
+          %Phoenix.Socket.Broadcast {
+            topic: "global", 
+            event: "signalement_cloturé", 
+            payload: signalement_id
+          } -> 
+              {:noreply,
+                socket 
+                |> assign(:signalements, Signalement.liste(signaler_par_id: client.id))
+              }
         %{topic: "global", event: "vu_par", payload: vue} -> {:noreply, socket |> assign(:signalements, Signalement.liste(signaler_par_id: client.id))}
         _ -> {:noreply, socket}
       end

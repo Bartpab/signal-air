@@ -26,9 +26,9 @@ defmodule SignalNuisance.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: SignalNuisance.Supervisor]
-    ret = Supervisor.start_link(children, opts)
+    retval = Supervisor.start_link(children, opts)
     SignalNuisance.Task.Installer.install()
-    ret
+    retval
   end
 
   @impl true

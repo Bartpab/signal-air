@@ -44,7 +44,7 @@ defmodule SignalNuisance.Signalement do
     end
 
     def cloturer(signalement_id) do
-        __MODULE__ |> @repo.modifier(signalement_id, statut: "fermé")
+        __MODULE__ |> @repo.modifier(signalement_id, cloture: true, cloture_le: Timex.now())
         SignalNuisanceWeb.Endpoint.broadcast("global", "signalement_cloturé", signalement_id) 
     end
 

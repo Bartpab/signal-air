@@ -1,5 +1,5 @@
 defmodule SignalNuisance.Signalement.Commun do
-    defstruct id: nil, stype: nil, nb_vues: 0, lat: nil, long: nil, signaler_par_id: nil, cree_le: Timex.now(), status: "ouvert"
+    defstruct id: nil, stype: nil, nb_vues: 0, lat: nil, long: nil, signaler_par_id: nil, cree_le: Timex.now(), cloture: false, cloture_le: nil
 
     def __changeset__, do: %{
         nb_vues: :integer,
@@ -9,7 +9,7 @@ defmodule SignalNuisance.Signalement.Commun do
         cree_le: :naive_datetime
     }
     
-    def base, do: [id: nil, nb_vues: 0, lat: nil, long: nil, signaler_par_id: nil, cree_le: Timex.now(), status: "ouvert"]
+    def base, do: [id: nil, nb_vues: 0, lat: nil, long: nil, signaler_par_id: nil, cree_le: Timex.now(), cloture: false, cloture_le: nil]
     
     def inherits_changeset(opts \\ []) do
         Enum.reduce opts, __changeset__(), fn ({k, v}, acc) -> acc |> Map.put_new(k, v)  end

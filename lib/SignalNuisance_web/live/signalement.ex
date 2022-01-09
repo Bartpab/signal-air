@@ -44,7 +44,9 @@ defmodule SignalNuisance.Component.Signalement do
           %>
         </div>
         <div class="card-body">
+          <%= if @signalement.cloture == false do %>
           <a href="#" class="card-link" phx-click="cloturer" phx-target={@myself}>Cloturer</a>
+          <% end %>
         </div>
       </div>
       """

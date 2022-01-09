@@ -6,7 +6,7 @@ defmodule SignalNuisance.Commentaire.ListeLive do
 
     def mount(_params, %{"parent_id" => parent_id, "client" => client} = session, socket) do
       if connected?(socket) do
-        Phoenix.PubSub.subscribe(SignalNuisance.PubSub, parent_id)
+        Phoenix.PubSub.subscribe(SignalNuisance.PubSub, "global")
       end
 
       {:ok, socket 
@@ -19,21 +19,23 @@ defmodule SignalNuisance.Commentaire.ListeLive do
       }
     end   
 
-    def handle_info(%Phoenix.Socket.Broadcast{topic: _topic, event: "nouveau_commentaire", payload: commentaire}, %{assigns: %{nouveau_commentaires: nouveau_commentaires, client: client}} = socket) do
-      if commentaire.par_id != client.id do
-        {:noreply, socket |> assign(:nouveau_commentaires, [commentaire | nouveau_commentaires])}
-      else
-        {:noreply, socket}
+    def handle_info(msg, %{assigns: %{commentaires: commentaires, nouveau_commentaires: nouveau_commentaires, client: client, parent_id: parent_id}} = socket) do
+      case msg do
+        %Phoenix.Socket.Broadcast{topic: _topic, event: "nouveau", payload: {Commentaire, commentaire} = payload} ->
+        if commentaire.par_id != SignalNuisance.Client.id(client) and commentaire.parent_id ==  parent_id do
+          {:noreply, socket |> assign(:nouveau_commentaires, [commentaire | nouveau_commentaires])}
+        else
+          {:noreply, socket}
+        end
+        {:submitted, commentaire} -> 
+          {:noreply, 
+          socket 
+          |> assign(:afficher_formulaire, false)
+          |> assign(:afficher_commentaires, true)
+          |> assign(:commentaires, [commentaire | commentaires])
+        }
+        _ -> {:noreply, socket}
       end
-    end
-
-    def handle_info({:submitted, commentaire}, %{assigns: %{commentaires: commentaires}} = socket) do
-      {:noreply, 
-        socket 
-        |> assign(:afficher_formulaire, false)
-        |> assign(:afficher_commentaires, true)
-        |> assign(:commentaires, [commentaire | commentaires])
-      }
     end
 
     def handle_event("afficher_nouveaux_commentaires", _, %{assigns: %{commentaires: commentaires, nouveau_commentaires: nouveau_commentaires}} = socket) do
@@ -58,7 +60,7 @@ defmodule SignalNuisance.Commentaire.ListeLive do
         <h6>
         <a phx-click="basculer_affichage_commentaires">
           <%= if !@afficher_commentaires do %><i class="bi bi-caret-right"></i><%= else %><i class="bi bi-caret-down"></i><% end %> 
-          Commentaires (<%= length(@commentaires) %>)
+          Commentaires (<%= length(@commentaires) %><%= if length(@nouveau_commentaires) > 0, do: " + #{length(@nouveau_commentaires)}" %>)
         </a>
         </h6>
         <%= if @afficher_commentaires do %>

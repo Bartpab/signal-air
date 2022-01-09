@@ -20,7 +20,7 @@ defmodule SignalNuisance.Component.Formulaire.Commentaire do
             <%= label f, :contenu %>
             <%= textarea f, :contenu, class: "form-control", aria_describedby: "aideCommentaire", placeholder: "Votre commentaire" %>
             
-            <small id="aideCommentaire" class="form-text text-muted">Votre commentaire restera anonyme auprès des autres acteurs.</small>
+            <small id="aideCommentaire" class="form-text text-muted">Votre commentaire restera anonyme auprès des autres.</small>
           </div>
           <div class="form-group">
             <%= submit "Envoyer", class: "btn btn-primary" %>
@@ -31,7 +31,7 @@ defmodule SignalNuisance.Component.Formulaire.Commentaire do
     end
     
     def handle_event("sauvegarder", %{"commentaire" => commentaire_params}, %{assigns: %{client: client, parent_id: parent_id}} = socket) do
-      case commentaire_params |> Map.put("parent_id", parent_id) |> Map.put("par_id", client.id) |> SignalNuisance.Commentaire.créer do
+      case commentaire_params |> Map.put("parent_id", parent_id) |> Map.put("par_id", SignalNuisance.Client.id(client)) |> SignalNuisance.Commentaire.créer do
         {:ok, commentaire} -> 
           send self(), {:submitted, commentaire}
           {:noreply, socket}

@@ -1,5 +1,13 @@
 defmodule SignalNuisance.Client do
   defstruct [id: nil, mode: nil]
+
+  def id(client) do
+    if Map.has_key?(client, :as) do
+      client.as
+    else
+      client.id
+    end
+  end
 end
 
 defmodule SignalNuisance.Plugs.Client do

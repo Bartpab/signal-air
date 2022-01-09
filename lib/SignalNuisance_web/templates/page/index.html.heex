@@ -9,7 +9,7 @@
     <p>
         <%= link "Signaler", to: Routes.nuisance_olfactive_path(@conn, :new), class: "btn btn-primary"  %>
         <%= link "Mes signalements", to: Routes.live_path(@conn, SignalNuisanceWeb.Surveillance.CitoyenLive), class: "btn btn-secondary" %>
-        <%= link "Surveiller", to: Routes.live_path(@conn, SignalNuisanceWeb.Surveillance.ExploitantLive), class: "btn btn-secondary" %>
+        <%= link "Surveiller", to: Routes.live_path(@conn, SignalNuisanceWeb.Surveillance.Exploitant.DashboardLive, "acme"), class: "btn btn-secondary" %>
     </p>
   </div>
 </section>
