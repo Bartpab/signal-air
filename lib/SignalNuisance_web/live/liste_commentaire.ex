@@ -14,7 +14,7 @@ defmodule SignalNuisance.Commentaire.ListeLive do
         |> assign(:client, client)
         |> assign(:afficher_formulaire, false)
         |> assign(:afficher_commentaires, false)
-        |> assign(:commentaires, Commentaire.liste(parent_id: parent_id))
+        |> assign(:commentaires, Commentaire.liste(ou: [parent_id: parent_id]))
         |> assign(:nouveau_commentaires, [])
       }
     end   

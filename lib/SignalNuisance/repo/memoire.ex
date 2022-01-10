@@ -75,16 +75,71 @@ defmodule SignalNuisance.Repo.Memoire do
         {:reply, :ok, %{}}
     end
 
-    defp correspond?(entité, opts) do
-        opts 
-        |> Keyword.get_values(:where)
+    defp correspond?(entité, filtres) do
+        filtres
         |> Enum.all?((& &1.(entité)))
+    end
+
+    defp trier_par(entités, []) do
+        entités
+    end
+
+    defp trier_par(entités, [trier_par | tail]) do
+        entités
+        |> Enum.sort(fn (a, b) -> 
+            case trier_par do 
+                {trier_par, :desc} ->
+                    val_a = a |> Map.from_struct |> Map.get(trier_par)
+                    val_b = b |> Map.from_struct |> Map.get(trier_par) 
+                    val_a <= val_b
+                {trier_par, :asc} ->
+                    val_a = a |> Map.from_struct |> Map.get(trier_par)
+                    val_b = b |> Map.from_struct |> Map.get(trier_par) 
+                    val_a >= val_b
+                trier_par -> 
+                    val_a = a |> Map.from_struct |> Map.get(trier_par)
+                    val_b = b |> Map.from_struct |> Map.get(trier_par) 
+                    val_a >= val_b
+            end
+        end)
+        |> trier_par(tail)
+    end
+
+    defp limite(entités, limite) do
+        case limite do
+            x when x < 0 -> entités
+            x when x >= 0 -> entités |> Enum.take(limite)
+        end
+    end
+
+    def décalage(entités, décalage) do
+        entités
+        |> Enum.split(décalage)
+        |> elem(1)
     end
 
     @impl true
     def handle_call({cmd, type_entité, opts}, _from, état) when cmd == :liste do
         état = état |> assurer_table(type_entité) 
-        {:reply, état[type_entité][:entrées] |> Enum.filter(&correspond?(&1, opts)), état}
+
+        filtres = Keyword.get_values(opts, :ou)
+        |> Enum.map(fn ([{k, v}]) -> 
+            fn(entité) ->
+                entité |> Map.get(k) == v 
+            end
+        end)
+
+        tris_par    = Keyword.get_values(opts, :trier_par) 
+        limite      = Keyword.get(opts, :limite, -1) 
+        décalage    = Keyword.get(opts, :décalage, 0)
+
+        entrées = état[type_entité][:entrées] 
+        |> Enum.filter(&correspond?(&1, filtres))
+        |> trier_par(tris_par)
+        |> décalage(décalage)
+        |> limite(limite)
+
+        {:reply, entrées, état}
     end
 
     def créer(%type_entité{} = entité, opts \\ []) when is_struct(entité) do
@@ -103,6 +158,11 @@ defmodule SignalNuisance.Repo.Memoire do
     def liste(type_entité, opts \\ []) do
         type_entité = Keyword.get(opts, :as, type_entité)
         GenServer.call(__MODULE__, {:liste, type_entité, opts})
+    end
+
+    def compte(type_entité, opts \\ []) do
+        type_entité = Keyword.get(opts, :as, type_entité)
+        GenServer.call(__MODULE__, {:liste, type_entité, opts}) |> length
     end
 
     def récupérer(type_entité, id, opts \\ []) do

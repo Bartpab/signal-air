@@ -15,7 +15,7 @@ defmodule SignalNuisance.Component.Signalement do
     end
 
     def handle_event("cloturer", _, %{assigns: %{client: client, signalement: signalement}} = socket) do
-      SignalNuisance.Signalement.cloturer(signalement.id)
+      SignalNuisance.Signalement.cloturer(signalement)
       {:noreply, socket}
     end
 
@@ -30,12 +30,19 @@ defmodule SignalNuisance.Component.Signalement do
             end
             %>
           </h5>
-          <h6 class="card-subtitle mb-2 text-muted">#<%= @signalement.id %> | Signalé <%= @signalement.cree_le |> Timex.from_now  %> | <%= @signalement.nb_vues %> Vue(s) </h6>
-          <p class="card-text"><%= case @signalement.stype do
-            "nuisance_olfactive" -> "Intensité: #{@signalement.intensite} / 3 | Type: #{@signalement.type}"
-            _ -> "Nuisance"
-          end
-          %></p>
+          <h6 class="card-subtitle mb-2 text-muted">
+            #<%= @signalement.id %> | Signalé <%= @signalement.cree_le |> Timex.from_now  %> | <%= @signalement.nb_vues %> Vue(s) 
+            <%= if @signalement.cloture do %>
+            | Cloturé <%= @signalement.cloture_le |> Timex.from_now %>
+          <% end %>
+            </h6>
+          <p class="card-text">
+            <%= case @signalement.stype do
+              "nuisance_olfactive" -> "Intensité: #{@signalement.intensite} / 3 | Type: #{@signalement.type}"
+              _ -> "Nuisance"
+            end
+            %>
+          </p>
           <%= live_render @socket, SignalNuisance.Commentaire.ListeLive, id: "commentaires_#{@global_id}", 
                 session: %{
                   "parent_id" =>  @global_id,

@@ -23,30 +23,42 @@ defmodule SignalNuisance.Model do
         "#{type}:#{id}"
     end
     
-    defmacro __using__(_opts) do
-        quote do
+    defmacro __using__(mod_opts) do
+        [quote do
             @repo Application.get_env(:SignalNuisance, :repo)
-            
-            def changeset(attrs \\ %{}, opts \\ []) do
-                %__MODULE__{} 
-                    |> Ecto.Changeset.cast(attrs, Map.keys(__changeset__())) 
-                    |> (& if Keyword.has_key?(opts, :validate), do: &1 |> Ecto.Changeset.validate_required(Map.keys(__changeset__())), else: &1 ).()
-            end
+        end,
 
-            def créer(params, opts \\ []) do               
-                chgset = params |> changeset(validate: true)
-                
-                with true <- chgset.valid?,
-                    {:ok, entité} <- chgset |> Ecto.Changeset.apply_changes |> @repo.créer
-                do
-                    SignalNuisanceWeb.Endpoint.broadcast("global", "nouveau", {__MODULE__, entité}) 
-                    {:ok, entité}
+        unless Keyword.get(mod_opts, :polymorphism, false) do
+            quote do
+                def changeset(attrs \\ %{}, opts \\ []) do
+                    %__MODULE__{} 
+                        |> Ecto.Changeset.cast(attrs, Map.keys(__changeset__())) 
+                        |> (& if Keyword.has_key?(opts, :validate), do: &1 |> Ecto.Changeset.validate_required(Map.keys(__changeset__())), else: &1 ).()
+                end
+    
+                def créer(params, opts \\ []) do         
+                    as = unquote(Keyword.get(mod_opts, :as, nil))
+                    as = if as == nil do __MODULE__ else as end
+                    
+                    chgset = params |> changeset(validate: true)
+                    
+                    with true <- chgset.valid?,
+                        {:ok, entité} <- chgset |> Ecto.Changeset.apply_changes |> @repo.créer(as: as)
+                    do
+                        SignalNuisanceWeb.Endpoint.broadcast("global", "nouveau", {as, entité}) 
+                        {:ok, entité}
+                    end
                 end
             end
+        end,
 
+        quote do
             def modifier(id, modifications) do
+                as = unquote(Keyword.get(mod_opts, :as, nil))
+                as = if as == nil do __MODULE__ else as end
+
                 retval = __MODULE__ |> @repo.modifier(id, modifications)
-                SignalNuisanceWeb.Endpoint.broadcast("global", "modification", {__MODULE__, id, modifications}) 
+                SignalNuisanceWeb.Endpoint.broadcast("global", "modification", {as, id, modifications}) 
                 retval
             end
 
@@ -61,12 +73,14 @@ defmodule SignalNuisance.Model do
                 __MODULE__ |> @repo.récupérer(id)
             end
         
+            def compte(opts \\ []) do
+                __MODULE__ |> @repo.compte(opts)
+            end
+
             def liste(opts \\ []) do
-                opts = opts 
-                |> Enum.map(fn ({k, v}) -> {:where, fn (x) -> Map.get(x, k) == v end} end)
                 __MODULE__ |> @repo.liste(opts)
             end
-        end
+        end]
     end
 
 

@@ -22,7 +22,8 @@ config :gettext, default_locale: "fr"
 # Configures the scheduler
 config :SignalNuisance, SignalNuisance.Scheduler,
   jobs: [
-    {"@daily", {SignalNuisance.Task.Installer, :reinstall, []}}
+    {"@daily", {SignalNuisance.Task.Installer, :reinstall, []}},
+    {"* * * * *", {SignalNuisance.Task.Stub , :loop, []}}
   ]
 
 # Configures the endpoint

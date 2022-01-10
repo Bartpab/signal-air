@@ -24,24 +24,24 @@ defmodule SignalNuisanceWeb.Surveillance.CitoyenLive do
 
     def handle_info(msg, %{assigns: %{signalements: signalements, client: client}} = socket) do
       case msg do
-        %{topic: "global", event: "nouveau_signalement", payload: signalement} -> {:noreply, 
+        %{topic: "global", event: "nouveau", payload: {Signalement, signalement}} -> {:noreply, 
             socket 
               |> (&
-                if signalement.signaler_par_id == client.id do 
+                if signalement.par_id == client.id do 
                   &1 |> assign(:signalements, [signalement | signalements])
                 else &1 end
               ).()
           }
           %Phoenix.Socket.Broadcast {
             topic: "global", 
-            event: "signalement_cloturé", 
-            payload: signalement_id
+            event: "cloturé", 
+            payload: {Signalement, _signalement_id}
           } -> 
               {:noreply,
                 socket 
-                |> assign(:signalements, Signalement.liste(signaler_par_id: client.id))
+                |> assign(:signalements, Signalement.liste(ou: [par_id: client.id]))
               }
-        %{topic: "global", event: "vu_par", payload: vue} -> {:noreply, socket |> assign(:signalements, Signalement.liste(signaler_par_id: client.id))}
+        %{topic: "global", event: "vu_par", payload: vue} -> {:noreply, socket |> assign(:signalements, Signalement.liste(par_id: client.id))}
         _ -> {:noreply, socket}
       end
     end
@@ -58,7 +58,7 @@ defmodule SignalNuisanceWeb.Surveillance.CitoyenLive do
       {:ok, 
         socket
           |> assign(:client, client) 
-          |> assign(:signalements, Signalement.liste(signaler_par_id: client.id))
+          |> assign(:signalements, Signalement.liste(ou: [par_id: client.id]))
       }
     end
 

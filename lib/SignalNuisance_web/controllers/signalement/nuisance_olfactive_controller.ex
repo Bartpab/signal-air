@@ -2,12 +2,12 @@ defmodule SignalNuisanceWeb.Signalement.NuisanceOlfactiveController do
     use SignalNuisanceWeb, :controller
 
     alias SignalNuisance.Signalement
+    alias SignalNuisance.Signalement.NuisanceOlfactive
 
     def create(conn, %{"nuisance_olfactive" => params}) do
       with {:ok, _signalement} <- params
-      |> Map.put("signaler_par_id", conn.assigns.client.id)
-      |> Signalement.NuisanceOlfactive.validate
-      |> Signalement.créer
+      |> Map.put("par_id", conn.assigns.client.id)
+      |> NuisanceOlfactive.créer
         do
           conn
           |> put_flash(:info, "Signalement crée avec succès.")
@@ -34,7 +34,7 @@ defmodule SignalNuisanceWeb.Signalement.NuisanceOlfactiveController do
     end
 
     def new(conn, _params) do
-      conn |> render_form(SignalNuisance.Signalement.NuisanceOlfactive.changeset())
+      conn |> render_form(NuisanceOlfactive.changeset())
     end
   end
   

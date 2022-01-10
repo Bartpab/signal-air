@@ -18,9 +18,9 @@ defmodule SignalNuisance.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: SignalNuisance.PubSub},
       # Start the Endpoint (http/https)
-      SignalNuisanceWeb.Endpoint
+      SignalNuisanceWeb.Endpoint,
       # Start a worker by calling: SignalNuisance.Worker.start_link(arg)
-      # {SignalNuisance.Worker, arg}
+      SignalNuisance.Worker
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
