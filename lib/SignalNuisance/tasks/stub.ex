@@ -2,14 +2,14 @@ defmodule SignalNuisance.Task.Stub do
     alias SignalNuisance.Signalement.NuisanceOlfactive
     alias SignalNuisance.Signalement
 
-    def loop(step \\ 1000) do
+    def loop(step \\ 100) do
         0..step |> Enum.each(fn (_x) -> step() end)
     end
 
     def step() do
         case 0..100 |> Enum.random do
-            x when x in 0..49  -> signaler()
-            x when x in 50..100 -> cloturer()
+            x when x in 0..19  -> signaler()
+            x when x in 20..30 -> cloturer()
             _ -> 
         end
     end

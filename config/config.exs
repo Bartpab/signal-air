@@ -23,7 +23,8 @@ config :gettext, default_locale: "fr"
 config :SignalNuisance, SignalNuisance.Scheduler,
   jobs: [
     {"@daily", {SignalNuisance.Task.Installer, :reinstall, []}},
-    {"* * * * *", {SignalNuisance.Task.Stub , :loop, []}}
+    # Every 5s, does something
+    {{:extended, "5 * * * *"}, {SignalNuisance.Task.Stub , :loop, []}}
   ]
 
 # Configures the endpoint

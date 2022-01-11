@@ -123,9 +123,16 @@ defmodule SignalNuisance.Repo.Memoire do
         état = état |> assurer_table(type_entité) 
 
         filtres = Keyword.get_values(opts, :ou)
-        |> Enum.map(fn ([{k, v}]) -> 
-            fn(entité) ->
-                entité |> Map.get(k) == v 
+        |> Enum.map(fn (x) -> 
+            case x do
+                [{k, v}] -> fn(entité) -> entité |> Map.get(k) == v end
+                [{k, op, v}] ->  case op do
+                    :gt -> fn(entité) -> entité  |> Map.get(k) > v end
+                    :lt -> fn(entité) -> entité  |> Map.get(k) < v end
+                    :gte -> fn(entité) -> entité |> Map.get(k) >= v end
+                    :lte -> fn(entité) -> entité |> Map.get(k) <= v end
+                    :eq -> fn(entité) -> entité  |> Map.get(k) == v end
+                end
             end
         end)
 
