@@ -8,12 +8,12 @@ defmodule SignalNuisance.Task.Stub do
     end
 
     def step() do
-        {s_prob, c_prob} = case HoraireProduction.liste() do
-            [_] -> {0..40, 41..50}
+        {s_prob, c_prob} = case HoraireProduction.liste(ou: [termine_le: nil]) do
             [] -> {0..5, 6..90}
+            _ -> {0..50, 51..60}
         end
 
-        ev = 0..100 |> Enum.random 
+        ev = 0..100 |> Enum.random
 
         if ev in s_prob do
             signaler()
@@ -49,7 +49,7 @@ defmodule SignalNuisance.Task.Stub do
         u_long = u_long + origin_long
 
         %{
-            type: "Bitume", 
+            type: "Bitume",
             intensite: 1..3 |> Enum.random,
             par_id: "riverbot",
             lat: u_lat,
@@ -59,9 +59,9 @@ defmodule SignalNuisance.Task.Stub do
 
     def cloturer() do
         case Signalement.liste(ou: [cloture: false], ou: [par_id: "riverbot"]) |> Enum.take_random(1) do
-            [signalement] -> 
+            [signalement] ->
                 Signalement.cloturer(signalement)
-            _ -> 
+            _ ->
         end
     end
 end
