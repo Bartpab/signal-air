@@ -14,13 +14,13 @@ defmodule SignalNuisance.Worker do
     def handle_info(msg, état) do
         case msg do
           %Phoenix.Socket.Broadcast {
-            topic: "global", 
-            event: "nouveau", 
+            topic: "global",
+            event: "nouveau",
             payload: {SignalNuisance.Commentaire, commentaire}
-          } -> 
+          } ->
             if commentaire.parent_id |> String.starts_with?("signalement:") do
-                signalement_id = commentaire.parent_id 
-                |> String.replace("signalement:", "") 
+                signalement_id = commentaire.parent_id
+                |> String.replace("signalement:", "")
                 |> String.to_integer
 
                 SignalNuisance.Signalement.modifier(signalement_id, [modifie_le: commentaire.crée_le])
