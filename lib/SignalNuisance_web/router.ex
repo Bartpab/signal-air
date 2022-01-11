@@ -25,6 +25,7 @@ defmodule SignalNuisanceWeb.Router do
       
       live_session :client, session: {SignalNuisance.Plugs.Client, :inject_in_live, []} do
         live "/exploitant/:slug/dashboard", Exploitant.DashboardLive
+        live "/exploitant/:slug/horaires", Exploitant.HorairesProductionLive
         live "/mes-signalements", CitoyenLive
       end
       

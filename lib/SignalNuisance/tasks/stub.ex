@@ -1,16 +1,26 @@
 defmodule SignalNuisance.Task.Stub do
     alias SignalNuisance.Signalement.NuisanceOlfactive
     alias SignalNuisance.Signalement
+    alias SignalNuisance.HoraireProduction
 
     def loop(step \\ 100) do
         0..step |> Enum.each(fn (_x) -> step() end)
     end
 
     def step() do
-        case 0..100 |> Enum.random do
-            x when x in 0..19  -> signaler()
-            x when x in 20..30 -> cloturer()
-            _ -> 
+        {s_prob, c_prob} = case HoraireProduction.liste() do
+            [_] -> {0..40, 41..50}
+            [] -> {0..5, 6..90}
+        end
+
+        ev = 0..100 |> Enum.random 
+
+        if ev in s_prob do
+            signaler()
+        end
+
+        if ev in c_prob do
+            cloturer()
         end
     end
 
