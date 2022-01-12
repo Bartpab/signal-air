@@ -14,7 +14,7 @@ defmodule SignalNuisance.Component.Formulaire.Commentaire do
 
     def render(assigns) do
       ~H"""
-      <div id={@id}>
+      <div>
         <.form let={f} for={@changeset} phx-submit="sauvegarder" phx-target={@myself}>
           <div class="form-group">
             <%= label f, :contenu %>

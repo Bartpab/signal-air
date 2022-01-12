@@ -67,8 +67,11 @@ body {
 
 .text-white-50 { color: rgba(255, 255, 255, .5); }
 
-.bg-purple { background-color: #dc3545; }
+.text-red { color: #dc3545; }
+.text-green {color: seagreen;}
 
+.bg-red { background-color: #dc3545; }
+.bg-green { background-color: seagreen;}
 
 footer {
   padding-top: 3rem;

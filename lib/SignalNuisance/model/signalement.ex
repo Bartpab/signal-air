@@ -20,7 +20,7 @@ defmodule SignalNuisance.Signalement do
             _ -> signalement_or_id
         end
 
-        __MODULE__ |> @repo.modifier(signalement_id, cloture: true, cloture_le: Timex.now())
+        __MODULE__ |> @repo.modifier(signalement_id, cloture: true, cloture_le: Timex.now(), modifie_le: Timex.now())
         SignalNuisanceWeb.Endpoint.broadcast("global", "cloturé", {__MODULE__, signalement_id}) 
         SignalNuisanceWeb.Endpoint.broadcast("global", "signalement_cloturé", signalement_id) 
     end

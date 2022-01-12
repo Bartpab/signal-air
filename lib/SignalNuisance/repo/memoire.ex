@@ -91,15 +91,15 @@ defmodule SignalNuisance.Repo.Memoire do
                 {trier_par, :desc} ->
                     val_a = a |> Map.from_struct |> Map.get(trier_par)
                     val_b = b |> Map.from_struct |> Map.get(trier_par) 
-                    val_a <= val_b
+                    val_a >= val_b
                 {trier_par, :asc} ->
                     val_a = a |> Map.from_struct |> Map.get(trier_par)
                     val_b = b |> Map.from_struct |> Map.get(trier_par) 
-                    val_a >= val_b
+                    val_a <= val_b
                 trier_par -> 
                     val_a = a |> Map.from_struct |> Map.get(trier_par)
                     val_b = b |> Map.from_struct |> Map.get(trier_par) 
-                    val_a >= val_b
+                    val_a <= val_b
             end
         end)
         |> trier_par(tail)

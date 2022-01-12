@@ -22,7 +22,10 @@ config :gettext, default_locale: "fr"
 # Configures the scheduler
 config :SignalNuisance, SignalNuisance.Scheduler,
   jobs: [
+    # Drop/Install each day
     {"@daily", {SignalNuisance.Task.Installer, :reinstall, []}},
+    # Every minute, does some stats
+    {"* * * * *", {SignalNuisance.Task.Stats.ParMinute, :somme_signalements_en_cours, []}},
     # Every 5s, does something
     {{:extended, "5 * * * *"}, {SignalNuisance.Task.Stub , :loop, []}}
   ]
