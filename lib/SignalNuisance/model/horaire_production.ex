@@ -1,6 +1,7 @@
 defmodule SignalNuisance.HoraireProduction do
     def __changeset__, do: %{
-        entreprise_id: :integer
+        entreprise_id: :integer,
+        commence_le: :naive_datetime
     }
     
     defstruct id: nil, entreprise_id: nil, commence_le: Timex.now(), termine_le: nil
@@ -24,8 +25,7 @@ defmodule SignalNuisance.HoraireProduction do
         
         case liste(ou: [entreprise_id: entreprise_id], ou: [termine_le: nil]) do
             [] -> 
-                IO.inspect("Commencer production")
-                %{entreprise_id: entreprise_id} |> créer   
+                %{entreprise_id: entreprise_id, commence_le: Timex.now()} |> créer   
             _ -> 
         end
     end
@@ -38,7 +38,6 @@ defmodule SignalNuisance.HoraireProduction do
         
         case liste(ou: [entreprise_id: entreprise_id], ou: [termine_le: nil]) do
             [horaire] -> 
-                IO.inspect("Terminer production")
                 modifier(horaire.id, [termine_le: Timex.now()])  
             _ ->
         end
