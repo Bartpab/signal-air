@@ -1,6 +1,7 @@
 defmodule SignalNuisance.Task.Installer do
     def reinstall() do
         SignalNuisance.Repo.Memoire.drop()
+        install()
     end
 
     def install() do
