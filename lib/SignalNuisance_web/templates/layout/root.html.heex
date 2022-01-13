@@ -46,12 +46,14 @@
       </div>
     </nav>
   </header>
-  <div class="container-fluid">
-    <div class="d-flex align-items-center p-3 my-3 text-white bg-red rounded shadow-sm">
+  <div class="container-fluid" id="body">
+    <div class="row px-0">
+    <div class="col-12 d-flex align-items-center p-3 text-white bg-red shadow-md">
       <div class="lh-1">
         <h1 class="h6 mb-0 text-white lh-1">Version de démonstration</h1>
         <small>Ceci est une preuve de concept afin de démontrer la faisabilité d'une plateforme de signalement des nuisances pour les installations classées</small>
       </div>
+    </div>
     </div>
     <%= @inner_content %>
     <script type="text/javascript">
@@ -64,13 +66,16 @@
       })()
     </script>
   </div>
-  <br/>
-  <footer class="text-muted bg-white shadow-sm"> 
+  <footer class="text-muted bg-white shadow"> 
       <div class="container">
-        <p class="float-right">
-          <a href="#">Retour en haut</a>
-        </p>
-        <p>Signal'Nuisance, un concept de plateforme de signalement de nuisances pour les installations classées</p>
+        <div class="row">
+            <div class="col-8">
+              <div class="display-6">Signal'Nuisance</div>
+              <p>Signal'Nuisance, un concept de plateforme de signalement de nuisances pour les installations classées</p>
+            </div>
+            <div class="col-4">
+          </div>
+        </div>
       </div>
   </footer>
   </body>

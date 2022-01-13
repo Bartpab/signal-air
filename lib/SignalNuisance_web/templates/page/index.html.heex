@@ -1,16 +1,88 @@
-<section class="jumbotron text-center">
-  <div class="container">
-    <h1 class="jumbotron-heading">
-      <%= gettext "Bienvenue sur %{name} !", name: "Signal'Nuisance" %>
-    </h1>
-    <p class="lead text-muted">
-      <%= gettext "Plateforme de signalement des nuisances liées à la qualité de l'air. " %>
-    </p>
-    <p>
-        <%= link "Signaler", to: Routes.nuisance_olfactive_path(@conn, :new), class: "btn btn-primary"  %>
-        <%= link "Mes signalements", to: Routes.live_path(@conn, SignalNuisanceWeb.Surveillance.CitoyenLive), class: "btn btn-secondary" %>
-        <%= link "Surveiller", to: Routes.live_path(@conn, SignalNuisanceWeb.Surveillance.Exploitant.DashboardLive, "acme"), class: "btn btn-secondary" %>
-    </p>
+<div class="container-fluid p-0 my-0">
+  <div class="container my-5">
+      <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+        <div class="col-lg-6 p-3 p-lg-5 pt-lg-3">
+          <h1 class="display-4 fw-bold lh-1">Maîtriser les nuisances industrielles</h1>
+          <p class="lead">Signal'Nuisance permet l'aggrégation, la transmission, la surveillance et le suivi des nuisances provoquées par les entreprises à proximité des riverains.</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+            <%= link "Signaler", to: Routes.nuisance_olfactive_path(@conn, :new), class: "btn btn-primary btn-lg px-4 me-md-2 fw-bold"  %>
+            <%= link "Surveiller", to: Routes.live_path(@conn, SignalNuisanceWeb.Surveillance.Exploitant.DashboardLive, "acme"), class: "btn btn-outline-secondary btn-lg px-4" %>
+          </div>
+        </div>
+        <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
+            <div class="display-6"><p>Je suis:</p></div> 
+            <div class="list-group">
+                <a href="#exploitant" class="list-group-item list-group-item-action display-5">un exploitant</a>
+                <a href="#riverain" class="list-group-item list-group-item-action display-5" data-bs-target="#carousel" data-bs-slide-to="0" >un(e) riverain(e)</a>
+                <a href="#administration" class="list-group-item list-group-item-action display-5">une administration</a>
+            </div>
+        </div>
+      </div>
   </div>
-</section>
 
+  <div id="riverain" class="container-fluid border-bottom pt-3">
+      <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+        <div class="col-lg-6 p-3 p-lg-5 pt-lg-3">
+          <h1 class="display-4 fw-bold lh-1">En tant que riverain(e),</h1>
+          <p class="lead">Signal'Nuisance vous permet de signaler une nuisance, consulter vos signalements passés, et recevoir des retours des exploitants proches de chez vous, le tout en temps réel.</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+            <%= link "Signaler", to: Routes.nuisance_olfactive_path(@conn, :new), class: "btn btn-primary btn-lg px-4 me-md-2 fw-bold"  %>
+          </div>
+        </div>
+        <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden">
+            <div class="display-6"><p>Je peux:</p></div> 
+            <ul class="list-group">
+                <li href="#" class="list-group-item list-group-item-action">participer à la prévention des nuisances</li>
+                <li href="#" class="list-group-item list-group-item-action">avertir des nuisances et recevoir des réponses des exploitants</li>
+                <li href="#" class="list-group-item list-group-item-action">consulter mes signalements passés et en cours</li>
+                <li href="#" class="list-group-item list-group-item-action">suivre l'efficacité de la maîtrise des risques de nuisance</li>
+              
+            </ul>
+        </div>
+      </div>
+  </div>
+
+  <div id="exploitant" class="container-fluid border-bottom my-3">
+      <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+        <div class="col-lg-6 p-3 p-lg-5 pt-lg-3">
+          <h1 class="display-4 fw-bold lh-1">En tant qu'exploitant,</h1>
+          <p class="lead">Signal'Nuisance vous permet de surveiller, répondre et suivre les nuisances des riverains, le tout en temps réel.</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+                      <%= link "Surveiller", to: Routes.live_path(@conn, SignalNuisanceWeb.Surveillance.Exploitant.DashboardLive, "acme"), class: "btn btn-primary btn-lg px-4 fw-bold" %>
+
+          </div>
+        </div>
+        <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden">
+            <div class="display-6"><p>Je peux:</p></div> 
+            <ul class="list-group">
+                <li href="#" class="list-group-item list-group-item-action">participer à la prévention des nuisances</li>
+                <li href="#" class="list-group-item list-group-item-action">recevoir et répondre aux signalements</li>
+                <li href="#" class="list-group-item list-group-item-action">surveiller en temps réel les nuisances perçues par les riverains</li>
+                <li href="#" class="list-group-item list-group-item-action">suivre l'efficacité de la maîtrise des risques de nuisance</li>
+              
+            </ul>
+        </div>
+      </div>
+  </div>
+
+  <div id="administration" class="container-fluid my-3">
+      <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+        <div class="col-lg-6 p-3 p-lg-5 pt-lg-3">
+          <h1 class="display-4 fw-bold lh-1">En tant qu'administration publique,</h1>
+          <p class="lead">Signal'Nuisance vous permet de surveiller, et suivre les nuisances des riverains, le tout en temps réel.</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+                      <%= link "Surveiller", to: Routes.live_path(@conn, SignalNuisanceWeb.Surveillance.Exploitant.DashboardLive, "acme"), class: "btn btn-primary btn-lg px-4 fw-bold" %>
+
+          </div>
+        </div>
+        <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden">
+            <div class="display-6"><p>Je peux:</p></div> 
+            <ul class="list-group">
+                <li href="#" class="list-group-item list-group-item-action">surveiller en temps réel les nuisances perçues par les riverains</li>
+                <li href="#" class="list-group-item list-group-item-action">suivre l'efficacité de la maîtrise des risques de nuisance</li>
+              
+            </ul>
+        </div>
+      </div>
+  </div>
+</div>
